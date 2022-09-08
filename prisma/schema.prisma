@@ -1,0 +1,23 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+// generator dto {
+//  provider                        = "prisma-generator-nestjs-dto"
+//  output                          = "../src/models"
+//  outputToNestJsResourceStructure = "true"
+//  dtoSuffix                       = "DTO"
+//  reExport                        = "true"
+//  fileNamingStyle                 = "camel"
+//}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Example {
+  id  String @id @default(uuid())
+  text String  
+}
