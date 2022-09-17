@@ -1,8 +1,8 @@
 import { ExampleController } from "@example/controller";
 import { IExampleRepository } from "@example/repository";
 import { ExampleService, IExampleService } from "@example/service";
-import { CreateExampleDto, GetExampleDto } from "@models/example/dto";
-import { Example } from "@models/example/entities";
+import { CreateExampleDto, GetExampleDto } from "@models/example/args";
+import { Example } from "@models/example/types";
 import { Test, TestingModule } from "@nestjs/testing";
 import { DummyExampleRepository } from "../dummies";
 

@@ -3,8 +3,8 @@ generator client {
   binaryTargets = ["native", "linux-musl"]
 }
 
-// generator dto {
-//  provider                        = "prisma-generator-nestjs-dto"
+// generator args {
+//  provider                        = "prisma-generator-nestjs-args"
 //  output                          = "../src/models"
 //  outputToNestJsResourceStructure = "true"
 //  dtoSuffix                       = "DTO"
@@ -17,7 +17,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Example {
+model User {
   id  String @id @default(uuid())
-  text String  
+  email String @unique
+  password String
 }
