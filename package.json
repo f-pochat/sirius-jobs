@@ -6,6 +6,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "quick-start": "prisma migrate dev && nest start",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "npx prisma format & prettier --write \"src/**/*.ts\" \"test/**/*.ts\" & wait",

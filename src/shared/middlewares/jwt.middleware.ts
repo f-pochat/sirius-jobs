@@ -10,7 +10,7 @@ export class JwtMiddleware implements NestMiddleware {
   constructor(@Inject(IUserRepository) private readonly repository: IUserRepository){}
 
   use(req: Request, res: Response, next: NextFunction) {
-    if (!req.body['query'].includes('loginUser') && !req.body['query'].includes('registerUser')) {
+    if (!req && !req.body['query'].includes('loginUser') && !req.body['query'].includes('registerUser')) {
       let token = <string>req.headers['authorization'].replace('Bearer ', '');
       if (token === null || token === '') throw new ForbiddenError()
       try{

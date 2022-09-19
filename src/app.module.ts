@@ -9,6 +9,7 @@ import { stitchSchemas } from "@graphql-tools/stitch";
 import { JwtMiddleware } from "@shared/middlewares";
 import { IUserRepository, UserRepository } from "@proxy/repository";
 import { SharedModule } from "@shared/shared.module";
+import { GRAPHQL_API_URL } from "@shared/constants";
 
 const createRemoteSchema = async ({ url, ...rest }): Promise<GraphQLSchema> => {
   const executor = async ({ document, variables }) => {
@@ -36,7 +37,7 @@ const userRepositoryProvider = {
     GraphQLModule.forRootAsync({
       driver: ApolloDriver,
       async useFactory(graphQlFactory: GraphQLFactory) {
-        const remoteSchema = await createRemoteSchema({ url: 'https://api.graphql.jobs/' })
+        const remoteSchema = await createRemoteSchema({ url: GRAPHQL_API_URL })
         return {
           autoSchemaFile: "schema.gql",
           transformSchema: async (schema: GraphQLSchema) => {
