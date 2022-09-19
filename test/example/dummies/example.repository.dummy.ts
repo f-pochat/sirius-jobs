@@ -1,5 +1,5 @@
 import { IExampleRepository } from "@example/repository";
-import { Example } from "@models/example/entities";
+import { Example } from "@models/example/types";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
