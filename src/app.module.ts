@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule, UseGuards } from "@nestjs/common";
 import { ProxyModule } from "@proxy/proxy.module";
 import { GraphQLFactory, GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
@@ -6,8 +6,9 @@ import { GraphQLSchema, print } from "graphql";
 import { rawRequest } from "graphql-request";
 import { introspectSchema, wrapSchema } from "@graphql-tools/wrap";
 import { stitchSchemas } from "@graphql-tools/stitch";
-import { ForbiddenError } from "@shared/errors";
-import { ValidateUser } from "@shared/util/validate-user.util";
+import { JwtMiddleware } from "@shared/middlewares";
+import { IUserRepository, UserRepository } from "@proxy/repository";
+import { SharedModule } from "@shared/shared.module";
 
 const createRemoteSchema = async ({ url, ...rest }): Promise<GraphQLSchema> => {
   const executor = async ({ document, variables }) => {
@@ -22,9 +23,16 @@ const createRemoteSchema = async ({ url, ...rest }): Promise<GraphQLSchema> => {
   });
 }
 
+const userRepositoryProvider = {
+  provide: IUserRepository,
+  useClass: UserRepository,
+}
+
+
 @Module({
   imports: [
     ProxyModule,
+    SharedModule,
     GraphQLModule.forRootAsync({
       driver: ApolloDriver,
       async useFactory(graphQlFactory: GraphQLFactory) {
@@ -43,7 +51,14 @@ const createRemoteSchema = async ({ url, ...rest }): Promise<GraphQLSchema> => {
           include: [ProxyModule]
         }
       }
-    })]
+    })],
+  providers: [userRepositoryProvider]
 })
 
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(JwtMiddleware)
+      .forRoutes('*');
+  }
+}
